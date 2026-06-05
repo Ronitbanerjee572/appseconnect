@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1a1a1e;
+            --text-color: #e4e4e7;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --border-color: #2e2e33;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 480px;
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: #a1a1aa;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #27272a;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        #statusMessage {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            display: none;
+            text-align: center;
+        }
+
+        .success { background-color: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .error { background-color: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>AI Generation Request</h2>
+    <form id="workflowForm">
+        <div class="form-group">
+            <label for="userKey">Verification Key</label>
+            <input type="password" id="userKey" placeholder="Enter your secret verification key" required>
+        </div>
+
+        <div class="form-group">
+            <label for="assetType">Asset Type</label>
+            <select id="assetType">
+                <option value="report">Document Generation</option>
+                <option value="image">Image Generation</option>
+                <option value="video">Video Generation</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="prompt">Prompt Instruction</label>
+            <textarea id="prompt" placeholder="Describe what you want the AI to create..." required></textarea>
+        </div>
+
+        <button type="submit">Trigger Workflow</button>
+    </form>
+
+    <div id="statusMessage"></div>
+</div>
+
+<script>
+    // PASTE YOUR APPSECONNECT TEST WEBHOOK URL HERE
+    const WEBHOOK_URL = "https://webhook.appse.ai/webhooks/test/b70fd17a-0a14-4404-9aaa-27ab9bcddd86";
+
+    document.getElementById('workflowForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const statusDiv = document.getElementById('statusMessage');
+        const submitBtn = e.target.querySelector('button');
+        
+        const payload = {
+            verification_key: document.getElementById('userKey').value,
+            asset_type: document.getElementById('assetType').value,
+            prompt: document.getElementById('prompt').value
+        };
+
+        // UI Feedback: Loading state
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Sending Request...";
+        statusDiv.style.display = "none";
+
+        try {
+            const response = await fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                statusDiv.className = "success";
+                statusDiv.innerText = "Request successfully sent to the AI Workflow!";
+                document.getElementById('prompt').value = ""; // Clear input on success
+            } else {
+                throw new Error(`Server returned code ${response.status}`);
+            }
+        } catch (error) {
+            statusDiv.className = "error";
+            statusDiv.innerText = "Failed to trigger workflow. Please check your connection.";
+            console.error("Error:", error);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Trigger Workflow";
+            statusDiv.style.display = "block";
+        }
+    });
+</script>
+
+</body>
+</html>
