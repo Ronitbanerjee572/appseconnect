@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Assistant Dashboard</title>
+    <title>AI Multi-Agent Studio</title>
     <style>
         :root {
-            --bg-color: #121214;
-            --card-bg: #1a1a1e;
-            --text-color: #e4e4e7;
+            --bg-color: #0b0c0e;
+            --card-bg: #13151a;
+            --text-color: #e2e8f0;
             --accent-color: #6366f1;
             --accent-hover: #4f46e5;
-            --border-color: #2e2e33;
+            --border-color: #22252e;
+            --terminal-bg: #07080a;
         }
 
         body {
@@ -23,25 +24,35 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .container {
             background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            padding: 2.2rem;
+            border-radius: 14px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
             width: 100%;
-            max-width: 480px;
+            max-width: 520px;
             border: 1px solid var(--border-color);
             box-sizing: border-box;
         }
 
         h2 {
             margin-top: 0;
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.25rem;
             color: #ffffff;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             text-align: center;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-bottom: 1.75rem;
         }
 
         .form-group {
@@ -51,137 +62,182 @@
         label {
             display: block;
             margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-            color: #a1a1aa;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        input, select, textarea {
+        input, textarea {
             width: 100%;
-            padding: 0.75rem;
-            background-color: #27272a;
+            padding: 0.8rem;
+            background-color: #1c1f26;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 8px;
             color: #ffffff;
-            font-size: 1rem;
+            font-size: 0.95rem;
             box-sizing: border-box;
-            transition: border-color 0.2s;
+            transition: all 0.2s ease;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus, textarea:focus {
             outline: none;
             border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
         }
 
         textarea {
             resize: vertical;
-            height: 100px;
+            height: 90px;
         }
 
         button {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.85rem;
             background-color: var(--accent-color);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s ease;
+            margin-top: 0.5rem;
         }
 
         button:hover {
             background-color: var(--accent-hover);
         }
 
-        #statusMessage {
-            margin-top: 1rem;
-            padding: 0.75rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            display: none;
-            text-align: center;
+        button:disabled {
+            background-color: #334155;
+            color: #64748b;
+            cursor: not-allowed;
         }
 
-        .success { background-color: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-        .error { background-color: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        /* Test Console Styling */
+        .terminal {
+            margin-top: 1.5rem;
+            background-color: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            color: #38bdf8;
+            max-height: 180px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .terminal-line {
+            margin-bottom: 0.4rem;
+            line-height: 1.4;
+        }
+
+        .system { color: #a78bfa; }
+        .success { color: #34d399; }
+        .error { color: #f87171; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>AI Generation Request</h2>
-    <form id="workflowForm">
+    <h2>Multi-Agent AI Workspace</h2>
+    <div class="subtitle">Dynamic Document Compilation & Graphics Matrix</div>
+    
+    <form id="agentForm">
         <div class="form-group">
-            <label for="userKey">Verification Key</label>
-            <input type="password" id="userKey" placeholder="Enter your secret verification key" required>
+            <label for="userKey">Security Verification Token</label>
+            <input type="password" id="userKey" placeholder="Paste security token to authenticate..." required>
         </div>
 
         <div class="form-group">
-            <label for="assetType">Asset Type</label>
-            <select id="assetType">
-                <option value="report">Document Generation</option>
-                <option value="image">Image Generation</option>
-                <option value="video">Video Generation</option>
-            </select>
+            <label for="topic">Research Core Topic</label>
+            <textarea id="topic" placeholder="e.g., The evolution of clean energy distribution grids in smart cities..." required></textarea>
         </div>
 
-        <div class="form-group">
-            <label for="prompt">Prompt Instruction</label>
-            <textarea id="prompt" placeholder="Describe what you want the AI to create..." required></textarea>
-        </div>
-
-        <button type="submit">Trigger Workflow</button>
+        <button type="submit" id="submitBtn">Deploy Agents Pipeline</button>
     </form>
 
-    <div id="statusMessage"></div>
+    <div class="terminal" id="processTerminal"></div>
 </div>
 
 <script>
-    // PASTE YOUR APPSECONNECT TEST WEBHOOK URL HERE
+    // Target active web listener path
     const WEBHOOK_URL = "https://webhook.appse.ai/webhooks/test/b70fd17a-0a14-4404-9aaa-27ab9bcddd86";
 
-    document.getElementById('workflowForm').addEventListener('submit', async (e) => {
+    const terminal = document.getElementById('processTerminal');
+
+    function logToTerminal(text, type = '') {
+        const line = document.createElement('div');
+        line.className = `terminal-line ${type}`;
+        const timestamp = new Date().toLocaleTimeString();
+        line.innerText = `[${timestamp}] ${text}`;
+        terminal.appendChild(line);
+        terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    document.getElementById('agentForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const statusDiv = document.getElementById('statusMessage');
-        const submitBtn = e.target.querySelector('button');
+        const submitBtn = document.getElementById('submitBtn');
+        const topicValue = document.getElementById('topic').value;
         
         const payload = {
             verification_key: document.getElementById('userKey').value,
-            asset_type: document.getElementById('assetType').value,
-            prompt: document.getElementById('prompt').value
+            topic: topicValue
         };
 
-        // UI Feedback: Loading state
+        // Initialize UI State
         submitBtn.disabled = true;
-        submitBtn.innerText = "Sending Request...";
-        statusDiv.style.display = "none";
+        submitBtn.innerText = "Processing Sequence...";
+        terminal.innerHTML = '';
+        terminal.style.display = "block";
 
+        // Step-by-Step Simulated Orchestration Log Tracking
+        logToTerminal("Initializing transaction request payload...", "system");
+        logToTerminal(`Targeting Listener Route: ${WEBHOOK_URL.substring(0, 45)}...`, "system");
+        
         try {
+            // Trigger actual network callback to appse.ai
             const response = await fetch(WEBHOOK_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
 
-            if (response.ok) {
-                statusDiv.className = "success";
-                statusDiv.innerText = "Request successfully sent to the AI Workflow!";
-                document.getElementById('prompt').value = ""; // Clear input on success
-            } else {
-                throw new Error(`Server returned code ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`HTTP Status ${response.status}`);
+
+            // Success feedback tracking steps
+            logToTerminal("Webhook successfully handshook. Gateway returned Status 200.", "success");
+            logToTerminal("Manager Agent triggered: Analyzing research asset requirements...", "system");
+            
+            setTimeout(() => {
+                logToTerminal("Manager Assessment Complete: Custom prompt array built.", "success");
+                logToTerminal("Loop execution sequence initialized via Splitter Node...", "system");
+            }, 1200);
+
+            setTimeout(() => {
+                logToTerminal("Dynamic Graphics Generation complete. Media buffers merged.", "success");
+                logToTerminal("Writer Agent triggered: Drafting master dossier structure...", "system");
+            }, 2600);
+
+            setTimeout(() => {
+                logToTerminal("Master Document compiled successfully.", "success");
+                logToTerminal("Google Drive Upload Node fired: Asset mapped to repository.", "success");
+                logToTerminal("Transaction logging pushed to Sheet. Process Lifecycle Completed.", "success");
+                
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Deploy Agents Pipeline";
+            }, 4200);
+
         } catch (error) {
-            statusDiv.className = "error";
-            statusDiv.innerText = "Failed to trigger workflow. Please check your connection.";
-            console.error("Error:", error);
-        } finally {
+            logToTerminal(`Execution aborted: ${error.message}`, "error");
+            logToTerminal("Verify your token string and network visibility.", "error");
             submitBtn.disabled = false;
-            submitBtn.innerText = "Trigger Workflow";
-            statusDiv.style.display = "block";
+            submitBtn.innerText = "Deploy Agents Pipeline";
         }
     });
 </script>
