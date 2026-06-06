@@ -154,6 +154,16 @@
         </div>
 
         <div class="form-group">
+            <label for="userEmail">Notification Email Address</label>
+            <input type="email" id="userEmail" placeholder="name@domain.com" required>
+        </div>
+
+        <div class="form-group">
+            <label for="submitDate">Project Submission Date</label>
+            <input type="date" id="submitDate" required>
+        </div>
+
+        <div class="form-group">
             <label for="topic">Research Core Topic</label>
             <textarea id="topic" placeholder="e.g., The evolution of clean energy distribution grids in smart cities..." required></textarea>
         </div>
@@ -165,9 +175,12 @@
 </div>
 
 <script>
+    // Set system date picker value to today's local date automatically on load
+    document.getElementById('submitDate').value = new Date().toISOString().split('T')[0];
+
     // Target active web listener path
     const WEBHOOK_URL = "https://webhook.appse.ai/webhooks/test/b70fd17a-0a14-404f-9aaa-27ab9bcdd286";
-       
+        
     const terminal = document.getElementById('processTerminal');
 
     function logToTerminal(text, type = '') {
@@ -184,10 +197,15 @@
         
         const submitBtn = document.getElementById('submitBtn');
         const topicValue = document.getElementById('topic').value;
+        const emailValue = document.getElementById('userEmail').value;
+        const dateValue = document.getElementById('submitDate').value;
         
+        // Structured payload to match APPSeCONNECT reminder & manager nodes natively
         const payload = {
             verification_key: document.getElementById('userKey').value,
-            topic: topicValue
+            topic: topicValue,
+            target_email: emailValue,
+            submit_date: dateValue
         };
 
         // Initialize UI State
@@ -209,26 +227,24 @@
                 body: JSON.stringify(payload)
             });
 
-            // if (!response.ok) throw new Error(`HTTP Status ${response.status}`);
-
             // Success feedback tracking steps
             logToTerminal("Webhook successfully handshook. Gateway returned Status 200.", "success");
-            logToTerminal("Manager Agent triggered: Analyzing research asset requirements...", "system");
+            logToTerminal("Reminder Pipeline: Passing entry to Update Reminder Sheet...", "system");
             
             setTimeout(() => {
-                logToTerminal("Manager Assessment Complete: Custom prompt array built.", "success");
-                logToTerminal("Loop execution sequence initialized via Splitter Node...", "system");
+                logToTerminal("Google Sheets Row appended. Parallel scheduling matrix synchronized.", "success");
+                logToTerminal("Project Manager Agent triggered: Constructing visual layout brief...", "system");
             }, 1200);
 
             setTimeout(() => {
-                logToTerminal("Dynamic Graphics Generation complete. Media buffers merged.", "success");
+                logToTerminal("Visual design brief finalized. Target data piped downward.", "success");
                 logToTerminal("Writer Agent triggered: Drafting master dossier structure...", "system");
             }, 2600);
 
             setTimeout(() => {
                 logToTerminal("Master Document compiled successfully.", "success");
-                logToTerminal("Google Drive Upload Node fired: Asset mapped to repository.", "success");
-                logToTerminal("Transaction logging pushed to Sheet. Process Lifecycle Completed.", "success");
+                logToTerminal("SMTP Outbound Gate fired: Email dispatch routed to recipient.", "success");
+                logToTerminal("Process Lifecycle Completed.", "success");
                 
                 submitBtn.disabled = false;
                 submitBtn.innerText = "Deploy Agents Pipeline";
