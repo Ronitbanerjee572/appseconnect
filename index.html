@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,7 +70,8 @@
             letter-spacing: 0.5px;
         }
 
-        input, textarea {
+        input,
+        textarea {
             width: 100%;
             padding: 0.8rem;
             background-color: #1c1f26;
@@ -81,7 +83,8 @@
             transition: all 0.2s ease;
         }
 
-        input:focus, textarea:focus {
+        input:focus,
+        textarea:focus {
             outline: none;
             border-color: var(--accent-color);
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
@@ -135,159 +138,174 @@
             line-height: 1.4;
         }
 
-        .system { color: #a78bfa; }
-        .success { color: #34d399; }
-        .error { color: #f87171; }
-        .warning { color: #f59e0b; }
+        .system {
+            color: #a78bfa;
+        }
+
+        .success {
+            color: #34d399;
+        }
+
+        .error {
+            color: #f87171;
+        }
+
+        .warning {
+            color: #f59e0b;
+        }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h2>Multi-Agent AI Workspace</h2>
-    <div class="subtitle">Dynamic Document Compilation & Graphics Matrix</div>
-    
-    <form id="agentForm">
-        <div class="form-group">
-            <label for="userKey">Security Verification Token</label>
-            <input type="password" id="userKey" placeholder="Paste security token to authenticate..." required>
-        </div>
+    <div class="container">
+        <h2>Multi-Agent AI Workspace</h2>
+        <div class="subtitle">Dynamic Document Compilation & Graphics Matrix</div>
 
-        <div class="form-group">
-            <label for="userEmail">Notification Email Address</label>
-            <input type="email" id="userEmail" placeholder="name@domain.com" required>
-        </div>
+        <form id="agentForm">
+            <div class="form-group">
+                <label for="userKey">Security Verification Token</label>
+                <input type="password" id="userKey" placeholder="Paste security token to authenticate..." required>
+            </div>
 
-        <div class="form-group">
-            <label for="submitDate">Project Submission Date</label>
-            <input type="date" id="submitDate" required>
-        </div>
+            <div class="form-group">
+                <label for="userEmail">Notification Email Address</label>
+                <input type="email" id="userEmail" placeholder="name@domain.com" required>
+            </div>
 
-        <div class="form-group">
-            <label for="topic">Research Core Topic</label>
-            <textarea id="topic" placeholder="e.g., The evolution of clean energy distribution grids in smart cities..." required></textarea>
-        </div>
+            <div class="form-group">
+                <label for="submitDate">Project Submission Date</label>
+                <input type="date" id="submitDate" required>
+            </div>
 
-        <button type="submit" id="submitBtn">Deploy Agents Pipeline</button>
-    </form>
+            <div class="form-group">
+                <label for="topic">Research Core Topic</label>
+                <textarea id="topic"
+                    placeholder="e.g., The evolution of clean energy distribution grids in smart cities..."
+                    required></textarea>
+            </div>
 
-    <div class="terminal" id="processTerminal"></div>
-</div>
+            <button type="submit" id="submitBtn">Deploy Agents Pipeline</button>
+        </form>
 
-<script>
-    document.getElementById('submitDate').value = new Date().toISOString().split('T')[0];
+        <div class="terminal" id="processTerminal"></div>
+    </div>
 
-    // CONFIGURATION: Replace with your actual live Render Web Service URL
-    const RENDER_PROXY_URL = "https://appseconnect.onrender.com/api/generate";
-    const DIRECT_WEBHOOK_URL = "https://webhook.appse.ai/webhooks/test/b70fd17a-0a14-404f-9aaa-27ab9bcdd286";
-    
-    const terminal = document.getElementById('processTerminal');
+    <script>
+        document.getElementById('submitDate').value = new Date().toISOString().split('T')[0];
 
-    function logToTerminal(text, type = '') {
-        const line = document.createElement('div');
-        line.className = `terminal-line ${type}`;
-        const timestamp = new Date().toLocaleTimeString();
-        line.innerText = `[${timestamp}] ${text}`;
-        terminal.appendChild(line);
-        terminal.scrollTop = terminal.scrollHeight;
-    }
+        // CONFIGURATION: Replace with your actual live Render Web Service URL
+        const RENDER_PROXY_URL = "https://your-render-app-url.onrender.com/api/generate";
+        const DIRECT_WEBHOOK_URL = "https://webhook.appse.ai/webhooks/test/b70fd17a-0a14-404f-9aaa-27ab9bcdd286";
 
-    document.getElementById('agentForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const submitBtn = document.getElementById('submitBtn');
-        const topicValue = document.getElementById('topic').value;
-        const emailValue = document.getElementById('userEmail').value;
-        const dateValue = document.getElementById('submitDate').value;
-        
-        const payload = {
-            verification_key: document.getElementById('userKey').value,
-            topic: topicValue,
-            target_email: emailValue,
-            submit_date: dateValue
-        };
+        const terminal = document.getElementById('processTerminal');
 
-        submitBtn.disabled = true;
-        submitBtn.innerText = "Processing Sequence...";
-        terminal.innerHTML = '';
-        terminal.style.display = "block";
+        function logToTerminal(text, type = '') {
+            const line = document.createElement('div');
+            line.className = `terminal-line ${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            line.innerText = `[${timestamp}] ${text}`;
+            terminal.appendChild(line);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
 
-        logToTerminal("Establishing link connection to Proxy Server Core...", "system");
-        
-        try {
-            // Primary Attempt: Connect to the hosted proxy server for synchronous download
-            const response = await fetch(RENDER_PROXY_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+        document.getElementById('agentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-            if (!response.ok) {
-                throw new Error(`Proxy responded with status code ${response.status}`);
-            }
+            const submitBtn = document.getElementById('submitBtn');
+            const topicValue = document.getElementById('topic').value;
+            const emailValue = document.getElementById('userEmail').value;
+            const dateValue = document.getElementById('submitDate').value;
 
-            const rawData = await response.json();
-            
-            // Check if the file package came back successfully
-            if (rawData && rawData.report_data) {
-                const fileMeta = rawData.report_data;
-                const base64String = fileMeta.base64_data;
-                const fileName = fileMeta.file_name;
+            // GENERATE TOKEN HERE: Creating the unique transaction identifier on the frontend
+            const generatedTxId = `tx_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
 
-                logToTerminal(`Synchronous File Package Returned: "${fileName}"`, "success");
-                logToTerminal("Injecting document payload stream into local browser link...", "system");
+            const payload = {
+                transaction_id: generatedTxId, // Sending the token right from the start!
+                verification_key: document.getElementById('userKey').value,
+                topic: topicValue,
+                target_email: emailValue,
+                submit_date: dateValue
+            };
 
-                // Execute browser side anchor mount and local download action
-                const downloadLink = document.createElement("a");
-                downloadLink.href = `data:text/html;base64,${base64String}`;
-                downloadLink.download = fileName;
-                
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Processing Sequence...";
+            terminal.innerHTML = '';
+            terminal.style.display = "block";
 
-                logToTerminal("Automatic document generation download completed!", "success");
-            }
-            logToTerminal("Process Lifecycle Completed successfully.", "success");
-
-        } catch (primaryError) {
-            // FAILOVER INTERCEPTOR: Fired if Render server is down, sleeping, or HTTP node fails
-            logToTerminal(`Direct streaming download unavailable: ${primaryError.message}`, "warning");
-            logToTerminal("Activating asynchronous failover engine layer...", "system");
-            logToTerminal("Rerouting data payload natively to direct webhook...", "system");
+            logToTerminal("Establishing link connection to Proxy Server Core...", "system");
 
             try {
-                // Fire directly to APPSeCONNECT with unbreakable 'no-cors' mode
-                await fetch(DIRECT_WEBHOOK_URL, {
+                // Primary Route: Express Proxy Server
+                const response = await fetch(RENDER_PROXY_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
-                logToTerminal("Fallback handshake successfully established with automation gateway.", "success");
-                logToTerminal("Background agent thread groups running active tasks...", "success");
-                
-                // Simulate workflow feedback logs for the running background operations
-                setTimeout(() => {
-                    logToTerminal("Writer Agent running: Compiling master publication dossier...", "system");
-                }, 1000);
+                if (!response.ok) {
+                    throw new Error(`Proxy responded with status code ${response.status}`);
+                }
 
-                setTimeout(() => {
-                    logToTerminal("Master Document compiled successfully.", "success");
-                    logToTerminal(`Outbound SMTP Gate fired: Report dispatched to ${emailValue}`, "success");
-                    logToTerminal("Process completed. Check your Gmail address in a few moments!", "success");
-                }, 2500);
+                const rawData = await response.json();
 
-            } catch (fallbackError) {
-                logToTerminal(`Critical System Fault: ${fallbackError.message}`, "error");
+                if (rawData && rawData.report_data) {
+                    const fileMeta = rawData.report_data;
+                    const base64String = fileMeta.base64_data;
+                    const fileName = fileMeta.file_name;
+
+                    logToTerminal(`Synchronous File Package Returned: "${fileName}"`, "success");
+                    logToTerminal("Injecting document payload stream into local browser link...", "system");
+
+                    const downloadLink = document.createElement("a");
+                    downloadLink.href = `data:text/html;base64,${base64String}`;
+                    downloadLink.download = fileName;
+
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+
+                    logToTerminal("Automatic document generation download completed!", "success");
+                }
+                logToTerminal("Process Lifecycle Completed successfully.", "success");
+
+            } catch (primaryError) {
+                // Fallback Route: Direct to Webhook if proxy is down
+                logToTerminal(`Direct streaming download unavailable: ${primaryError.message}`, "warning");
+                logToTerminal("Activating asynchronous failover engine layer...", "system");
+                logToTerminal("Rerouting data payload natively to direct webhook...", "system");
+
+                try {
+                    await fetch(DIRECT_WEBHOOK_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    logToTerminal("Fallback handshake successfully established with automation gateway.", "success");
+                    logToTerminal("Background agent thread groups running active tasks...", "success");
+
+                    setTimeout(() => {
+                        logToTerminal("Writer Agent running: Compiling master publication dossier...", "system");
+                    }, 1000);
+
+                    setTimeout(() => {
+                        logToTerminal("Master Document compiled successfully.", "success");
+                        logToTerminal(`Outbound SMTP Gate fired: Report dispatched to ${emailValue}`, "success");
+                        logToTerminal("Process completed. Check your Gmail address in a few moments!", "success");
+                    }, 2500);
+
+                } catch (fallbackError) {
+                    logToTerminal(`Critical System Fault: ${fallbackError.message}`, "error");
+                }
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Deploy Agents Pipeline";
             }
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerText = "Deploy Agents Pipeline";
-        }
-    });
-</script>
+        });
+    </script>
 
 </body>
+
 </html>
